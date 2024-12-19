@@ -20,7 +20,6 @@ if (program.errors) {
     puts(program);
 } else {
     let evaluated = evaluate(program, env);
-    puts(evaluated)
     if (evaluated != null) {
         puts(evaluated.toString());
     }

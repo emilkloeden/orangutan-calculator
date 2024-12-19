@@ -11,7 +11,10 @@ let evaluate = fn(node, env) {
     if (instanceOf(node, "AST.PROGRAM")) {
         return evaluateProgram(node, env)
     }
-    if (instanceOf(node, "OBJECT.INTEGER")) {
+    if (instanceOf(node, "AST.EXPRESSIONSTATEMENT")) {
+        return evaluate(node.expression, env)
+    }
+    if (instanceOf(node, "AST.INTEGERLITERAL")) {
         return object.Integer(node.value)
     }
     if (instanceOf(node, "AST.INFIXEXPRESSION")) {
@@ -25,7 +28,7 @@ let evaluate = fn(node, env) {
         }
         return evaluateInfixExpression(node.operator, left, right, env)
     }
-    return newError("Asked to evaluate unknown object: " node)
+    return newError("Asked to evaluate unknown object: " + node)
 }
 
 let evaluateProgram = fn(node, env) {
@@ -38,11 +41,14 @@ let evaluateProgram = fn(node, env) {
         if (instanceOf(result, "OBJECT.RETURNVALUE")) {
             result = result.value;
             done = true;
-        } else if (instanceOf(result, "OBJECT.ERROR")) {
-            done = true;
+        } else {
+            if (instanceOf(result, "OBJECT.ERROR")) {
+                done = true;
+            }
         }
         i = i + 1;
     })
+
     return result;
 }
 
@@ -50,33 +56,34 @@ let evaluateInfixExpression = fn(operator, left, right, env) {
     if (left == null || right == null) {
         return newError("Issue with infixExpression")
     }
-    if (instanceOf(left, "OBJECT.INTEGER") && instanceOf(right, "OBJECT.ERROR")) {
+    if (instanceOf(left, "OBJECT.INTEGER") && instanceOf(right, "OBJECT.INTEGER")) {
         return evaluateIntegerInfixExpression(operator, left, right)
-    } else if (left._type != right._type) {
-        return newError(
-        "type mismatch: " + left._type + operator + right._type
-    );
+    } else {
+        if (left._type != right._type) {
+            return newError(
+                "type mismatch: " + left._type + operator + right._type
+            );
+        }
   }
   return newError(
-    "unknown operator: "+ left._type + operator + right._type
+    "unknown operator XXX: "+ left._type + operator + right._type
   );
 }
 
 let evaluateIntegerInfixExpression = fn(operator, left, right) {
     let l = left.value;
     let r = right.value;
-
     if (operator == "+") {
         return object.Integer(l + r)
-    } else if (operator == "-") {
+    } if (operator == "-") {
         return object.Integer(l - r)
-    } else if (operator == "*") {
+    } if (operator == "*") {
         return object.Integer(l * r)
-    } else if (operator == "/") {
+    } if (operator == "/") {
         return object.Integer(l / r)
     }
   return newError(
-    "unknown operator: "+ left._type + operator + right._type
+    "unknown operator XXX: "+ left._type + operator + right._type
   );
 }
 

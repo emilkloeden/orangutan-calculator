@@ -40,6 +40,7 @@ let newExpressionStatement = fn(token) {
         "_type": "AST.EXPRESSIONSTATEMENT",
         "token": token,
         "getExpression": getExpression,
+        "expression": expression,
         "tokenLiteral": tokenLiteral,
         "toString": toString,
     }
@@ -60,10 +61,14 @@ let newIntegerLiteral = fn(token) {
         token.literal
     }
 
+    let getValue = fn() {
+        int(value)
+    }
+
     // TODO: confirm
     return {
         "_type": "AST.INTEGERLITERAL",
-        "value": value,
+        "value": getValue,
         "toString": toString,
         "tokenLiteral": tokenLiteral
     }
@@ -105,6 +110,7 @@ let newInfixExpression = fn(token, operator, left) {
         "_type": "AST.INFIXEXPRESSION",
         "left": left,
         "right": right,
+        "operator": operator,
         "toString": toString,
         "tokenLiteral": tokenLiteral
     }

@@ -38,6 +38,7 @@ let Null = fn() {
 }
 
 let Integer = fn(value) {
+    let _value = int(value)
     let toString = fn() {
         str(value)
     }
@@ -48,7 +49,7 @@ let Integer = fn(value) {
 
     return {
         "_type": "OBJECT.INTEGER",
-        "value": value,
+        "value": _value,
         "toString": toString,
         "hashKey": hashKey
     }

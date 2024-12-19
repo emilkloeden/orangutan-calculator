@@ -26,13 +26,11 @@ let precedences = {
 }
 
 let newParser = fn(l) {
-    puts("newParser")
     let lexer = l;
     let errors = [];
     let currentToken = lexer.nextToken();
     let peekToken = lexer.nextToken();
 
-    puts("6")
     // TODO: Confirm placement is important and if this is the right spot for it
     let prefixParseFns = fn () {
         {
@@ -41,7 +39,6 @@ let newParser = fn(l) {
         }
     }
     
-    puts("7")
     let infixParseFns = fn (){
         {
         TokenType["PLUS"]: parseInfixExpression,
@@ -54,67 +51,49 @@ let newParser = fn(l) {
         }
     }
     
-    puts("1")
     let nextToken = fn() {
-        puts("nextToken before, currentToken:", currentToken)
         currentToken = peekToken;
         peekToken = lexer.nextToken()
-        puts("nextToken after, currentToken:", currentToken)
     }
-    puts("2")
+
     let parseIntegerLiteral = fn() {
-        puts("parseIntegerLiteral")
         let lit = ast.newIntegerLiteral(currentToken)
-        puts("current token: ", currentToken)
         lit["value"] = currentToken.literal
         return lit
-        
-
-        // let error = "Could not parse " + currentToken.literal + " as integer."
-        // errors = append(errors, error)
-        // return null;
     }
-    puts("3")
+
     let parseProgram = fn() {
-        puts("parseProgram")
         let program = ast.newProgram()
+        let statements = program.statements
         while(fn(){currentToken.tokenType != "EOF"}, fn(){
             let stmt = parseStatement()
             if (stmt != null) {
-                append(program.statements, stmt)
+                statements = append(statements, stmt)
             }
             nextToken()
         })
+        program["statements"] = statements
         return program
     }
 
-    puts("4")
     let parseStatement = fn() {
-        puts("parseStatement")
         // TODO: implement comment, let, return statement parsing
         return parseExpressionStatement()
     }
 
-    puts("5")
     let parseExpressionStatement = fn() {
-        puts("parseExpressionStatement")
         let stmt = ast.newExpressionStatement(currentToken);
         stmt["expression"] = parseExpression(Precedence.LOWEST)
 
         if (peekTokenIs(TokenType.SEMICOLON)) {
             nextToken()
         }
+        let exp = stmt.expression
         return stmt
     }
     
-    
-
-    puts("8")
     let parseExpression = fn(precedence) {
-        puts("parseExpression, precedence=", precedence)
         let prefix = prefixParseFns()[TokenType[currentToken.tokenType]]
-        puts(prefixParseFns())
-        puts("looking for prefix function using:", TokenType[currentToken.tokenType])
         if (prefix == null) {
             puts("No prefix function found for token:", currentToken)
             noPrefixParseFnError(currentToken)
@@ -123,29 +102,23 @@ let newParser = fn(l) {
 
         let leftExp = prefix()
 
-        puts("precedence: ", precedence, "type(precedence): ", type(precedence))
         while(fn(){!peekTokenIs(TokenType.SEMICOLON) && precedence < peekPrecedence()}, fn(){
-            puts("precedence: ", precedence, "peekPrecedence():", peekPrecedence())
             let infix = infixParseFns()[TokenType[peekToken.tokenType]]
             if (infix == null) {
                 return null;
             }
             nextToken()
-            puts("before leftExp")
             leftExp = infix(leftExp)
-            puts("after leftExp")
         })
         return leftExp
         
     }
 
     let noPrefixParseFnError = fn(token) {
-        errors = append(errors, "No pp func for " + token.tokenType + " found." + token)
+        errors = append(errors, "No prefixParse func for " + token.tokenType + " found." + token)
     }
    
-    puts("9")
     let parsePrefixExpression = fn() {
-        puts("parsePrefixExpression")
 
         let expression = ast.newPrefixExpression(currentToken, currentToken.literal);
         nextToken()
@@ -153,9 +126,7 @@ let newParser = fn(l) {
         return expression
     }
 
-    puts("10")
     let parseInfixExpression = fn(left) {
-        puts("parseInfixExpression")
         let expression = ast.newInfixExpression(currentToken, currentToken.literal, left)
         let precedence = currentPrecedence()
         nextToken()
@@ -163,20 +134,15 @@ let newParser = fn(l) {
         return expression
     }
 
-    puts("11")
     let peekPrecedence = fn() {
-        puts("peekPrecedence")
         let p = precedences[TokenType[peekToken.tokenType]]
-        puts("p:", p, "p != null:", p!=null)
         if (p != null) {
             return p
         } 
         Precedence.LOWEST
     }
 
-    puts("11a")
     let currentPrecedence = fn() {
-        puts("currentPrecedence")
         let p = precedences[TokenType[currentToken.tokenType]]
         if (p != null) {
             return p
@@ -184,13 +150,10 @@ let newParser = fn(l) {
         Precedence.LOWEST
     }
 
-    puts("12")
     let peekTokenIs = fn(tokenType) {
-        puts("peekTokenIs")
         peekToken.tokenType == tokenType
     }
 
-    puts("13")
     return {
         "parseProgram": parseProgram
     }
