@@ -1,0 +1,31 @@
+let TokenType = {
+    "INT": "INT",
+    "EOF": "SlashZero",
+    "ASSIGN": "=",
+    "PLUS": "+",
+    "MINUS": "-",
+    "BANG": "!",
+    "ASTERISK": "*",
+    "SLASH": "/",
+    "MODULO": "%",
+    "AND": "&&",
+    "OR": "||",
+    "PIPE": "|>",
+
+    "LT": "<",
+    "LTE": "<=",
+    "GT": ">",
+    "GTE": ">=",
+
+    "EQ": "==",
+    "NOT_EQ": "!=",
+    
+    "SEMICOLON": ";",
+}
+
+let newToken = fn(tokenType, literal) {
+    return {
+        "tokenType": tokenType,
+        "literal": literal
+    }
+}

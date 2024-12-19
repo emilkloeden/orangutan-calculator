@@ -1,0 +1,115 @@
+let newProgram = fn() {
+    let statements = []
+
+    let tokenLiteral = fn() {
+        if (len(statements) > 0) {
+            return statements[0].tokenLiteral()
+        }
+        return "";
+    }
+
+    let toString = fn() {
+        return join(map(statements, fn(s) {s.toString()}),"")
+    }
+
+    return {
+        "_type": "AST.PROGRAM",
+        "statements": statements,
+        "tokenLiteral": tokenLiteral,
+        "toString": toString
+    }
+}
+
+let newExpressionStatement = fn(token) {
+    let expression = null;
+    let getExpression = fn() {
+        return expression
+    }
+    let toString = fn() {
+        if (getExpression() == null) {
+            ""
+        } else {
+            getExpression().toString()
+        }
+    }
+
+    let tokenLiteral = fn() {
+        this.token.literal
+    }
+    return {
+        "_type": "AST.EXPRESSIONSTATEMENT",
+        "token": token,
+        "getExpression": getExpression,
+        "tokenLiteral": tokenLiteral,
+        "toString": toString,
+    }
+}
+
+let newIntegerLiteral = fn(token) {
+    let value = null;
+    let toString = fn() {
+        if (value == null) {
+            ""
+        } else {
+            // TODO: confirm
+            str(value)
+        }
+    }
+
+    let tokenLiteral = fn() {
+        token.literal
+    }
+
+    // TODO: confirm
+    return {
+        "_type": "AST.INTEGERLITERAL",
+        "value": value,
+        "toString": toString,
+        "tokenLiteral": tokenLiteral
+    }
+}
+
+let newPrefixExpression = fn(token, operator) {
+    let right = null;
+
+    let toString = fn() {
+        return "(" + operator + right.toString() + ")"
+    }
+
+    let tokenLiteral = fn() {
+        token.literal
+    }
+
+    // TODO: confirm
+    return {
+        "_type": "AST.PREFIXEXPRESSION",
+        "right": right,
+        "toString": toString,
+        "tokenLiteral": tokenLiteral
+    }
+}
+
+let newInfixExpression = fn(token, operator, left) {
+    let right = null;
+
+    let toString = fn() {
+        return "(" + left.toString() + operator + right.toString() + ")"
+    }
+
+    let tokenLiteral = fn() {
+        token.literal
+    }
+
+    // TODO: confirm
+    return {
+        "_type": "AST.INFIXEXPRESSION",
+        "left": left,
+        "right": right,
+        "toString": toString,
+        "tokenLiteral": tokenLiteral
+    }
+}
+
+let instanceOf = fn(node, type) {
+    return node._type == type;
+}

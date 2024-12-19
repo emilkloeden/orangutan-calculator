@@ -1,0 +1,123 @@
+let loops = use("loops.🐵")
+let token = use("token.🐵");
+
+let while = loops.while;
+let newToken = token.newToken;
+
+let newLexer = fn(input) {
+    input = split(input,"")
+    let inputLength = len(input)
+    let position = 0;
+    let readPosition = 0;
+    let ch = "";
+    let readChar = fn() {
+        // puts("in readChar, current ch = ", ch, "current position = ", position, "current readPosition = ", readPosition, "input = ", input)
+        if (readPosition >= inputLength) {
+            ch = "SlashZero"
+        } else {
+            ch = input[readPosition]
+        }
+        position = readPosition;
+        readPosition = readPosition + 1
+    }
+
+    let getChar = fn() {
+        return ch
+    }
+
+    let skipWhitespace = fn() {
+        let whiteSpace = [""," ", "    ", "
+"]
+        let break = false;
+        while(fn() {!break}, fn() {
+            if (ch == whiteSpace[0] || ch == whiteSpace[1] || ch == whiteSpace[2] || ch == whiteSpace[3]) {
+                readChar();
+            } else {
+                break = true
+            }
+        })
+       
+    }
+
+    let nextToken = fn () {
+        skipWhitespace()
+        let tok = {}
+        if (getChar() == "+") {
+            tok = newToken("PLUS", "+")
+        } else {
+            if (getChar() == "-") {
+                tok = newToken("MINUS", "-")
+            } else {
+                if (isDigit(getChar())) {
+                    let number = readNumber()
+                    tok = newToken("INT", number)
+                } else {
+                    if (getChar() == "SlashZero") {
+                        tok = newToken("EOF", getChar())
+                    } else {
+                        tok = newToken("ILLEGAL", getChar())
+                    }
+                }
+            }
+        }
+        readChar()
+        return tok
+    }
+
+    let getPosition = fn() {
+        position
+    }
+
+    let readNumber = fn() {
+        let p = position;
+        let break = false;
+        while(fn(){!break}, fn(){
+            if(isDigit(getChar())) {
+                readChar()
+            } else {
+                break = true
+            }
+
+        })
+        
+        let res = []
+        let i = p;
+        let end = getPosition();
+        // puts("position:", position, "i:", i, "p:", p, "end", end)
+        while(fn(){i < end}, fn(){
+            res = append(res, input[i])
+            i = i + 1
+        })
+        
+        return join(res, "")
+
+    }
+
+    // this.ch doesn't update, so we have a function. I'm doing closures wrong
+    return {
+        "readChar": readChar,
+        "ch": ch, 
+        "getChar": getChar,
+        "nextToken": nextToken
+    }
+    
+}
+
+let isDigit = fn(ch) {
+    if (
+        ch == "0"
+        || ch == "1" 
+        || ch == "2" 
+        || ch == "3" 
+        || ch == "4" 
+        || ch == "5" 
+        || ch == "6" 
+        || ch == "7" 
+        || ch == "8" 
+        || ch == "9" 
+        ) {
+            true
+        } else {
+            false
+        }
+}
