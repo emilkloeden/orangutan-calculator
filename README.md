@@ -5,7 +5,7 @@ Orangutan Calculator is a command-line calculator written in the [Orangutan prog
 ## Features
 
 - Perform basic arithmetic operations (+, -, \*, /)
-- Lightweight and easy to use
+  - ... well, except Monkey only has integers, so the calculator returns the truncated integer of a division
 - Showcases the power of the Orangutan programming language
 
 ## Installation

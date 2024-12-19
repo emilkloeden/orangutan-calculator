@@ -43,25 +43,40 @@ let newLexer = fn(input) {
         let tok = {}
         if (getChar() == "+") {
             tok = newToken("PLUS", "+")
-        } else {
-            if (getChar() == "-") {
-                tok = newToken("MINUS", "-")
-            } else {
-                if (isDigit(getChar())) {
-                    let number = readNumber()
-                    tok = newToken("INT", number)
-                } else {
-                    if (getChar() == "SlashZero") {
-                        tok = newToken("EOF", getChar())
-                    } else {
-                        tok = newToken("ILLEGAL", getChar())
-                    }
-                }
-            }
+            readChar()
+            return tok
+        } 
+        if (getChar() == "-") {
+            tok = newToken("MINUS", "-")
+            readChar()
+            return tok
+        } 
+        if (getChar() == "*") {
+            tok = newToken("ASTERISK", "*")
+            readChar()
+            return tok
+        } 
+        if (getChar() == "/") {
+            tok = newToken("SLASH", "/")
+            readChar()
+            return tok
         }
+        if (isDigit(getChar())) {
+            let number = readNumber()
+            tok = newToken("INT", number)
+            readChar()
+            return tok
+        }
+        if (getChar() == "SlashZero") {
+            tok = newToken("EOF", getChar())
+            readChar()
+            return tok
+        }
+        tok = newToken("ILLEGAL", getChar())
         readChar()
         return tok
     }
+
 
     let getPosition = fn() {
         position

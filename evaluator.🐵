@@ -80,7 +80,7 @@ let evaluateIntegerInfixExpression = fn(operator, left, right) {
     } if (operator == "*") {
         return object.Integer(l * r)
     } if (operator == "/") {
-        return object.Integer(l / r)
+        return object.Integer(int(l / r))
     }
   return newError(
     "unknown operator XXX: "+ left._type + operator + right._type
