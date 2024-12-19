@@ -1,4 +1,4 @@
-let loops = use("./loops.🐵")
+let loops = use("../stdlib/loops.🐵")
 let object = use("./object.🐵");
 let ast = use("./ast.🐵");
 let instanceOf = ast.instanceOf;

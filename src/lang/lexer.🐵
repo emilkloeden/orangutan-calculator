@@ -1,4 +1,4 @@
-let loops = use("loops.🐵")
+let loops = use("../stdlib/loops.🐵")
 let token = use("token.🐵");
 
 let while = loops.while;

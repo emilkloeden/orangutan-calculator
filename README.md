@@ -21,10 +21,10 @@ Orangutan Calculator is a command-line calculator written in the [Orangutan prog
 
 ## Usage
 
-Run the calculator script by editing the contents of 'math.utan' then using the `orangutan` command:
+Run the calculator script by editing the contents of 'tests/math.utan' then using the `orangutan` command:
 
 ```bash
-orangutan run calc.utan
+orangutan run src/calc.utan
 ```
 
 ## Contributing
